@@ -1,0 +1,311 @@
+/* --- ОСНОВНЫЕ СТИЛИ --- */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    transition: all 0.4s ease;
+    background: transparent;
+}
+
+.main-header.scrolled {
+    height: 70px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.header-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Логотип */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+.logo-icon {
+    font-size: 2.5rem;
+}
+
+.logo-text {
+    font-family: 'Righteous', cursive;
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ff7eb3 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Навигация */
+.nav-menu {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-link {
+    position: relative;
+    text-decoration: none;
+    color: #333;
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.nav-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.7rem;
+    color: #ff7eb3;
+    margin-bottom: -2px;
+}
+
+.nav-text {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Линия под ссылкой */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff7eb3, #764ba2);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #ff7eb3;
+}
+
+/* --- МОБИЛЬНЫЙ АДАПТИВ (ТЕЛЕФОНЫ) --- */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 0 20px;
+    }
+
+    .main-header {
+        height: 70px;
+    }
+
+    .logo-icon {
+        font-size: 2rem;
+    }
+
+    .logo-text {
+        font-size: 1.4rem;
+    }
+
+    .nav-menu {
+        gap: 20px;
+        /* Уменьшаем расстояние на мобилках */
+    }
+
+    .nav-number {
+        display: none;
+        /* Убираем цифры, чтобы текст был крупнее и чище */
+    }
+
+    .nav-text {
+        font-size: 0.95rem;
+        /* Оптимальный размер для тапа пальцем */
+        font-weight: 800;
+    }
+}
+
+/* Для самых маленьких экранов */
+@media (max-width: 360px) {
+    .logo-text {
+        display: none;
+        /* Оставляем только эмодзи мороженого */
+    }
+}
+
+/* --- СТИЛИ ДЛЯ ЦИФР (СКРЫТЫ ПО УМОЛЧАНИЮ) --- */
+.nav-number {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 0.75rem;
+    color: #ff7eb3;
+
+    /* Начальное состояние: прозрачный и чуть смещен вверх */
+    opacity: 0;
+    transform: translateY(-8px);
+
+    /* Плавный переход */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Чтобы цифра не занимала место, пока её нет (опционально) */
+    margin-bottom: -12px;
+}
+
+/* --- ПОЯВЛЕНИЕ ПРИ НАВЕДЕНИИ --- */
+.nav-link:hover .nav-number {
+    opacity: 1;
+    transform: translateY(0);
+    margin-bottom: 0;
+    /* Возвращаем отступ при появлении */
+}
+
+/* Если ссылка активна (вы на этой странице), можно тоже показывать цифру */
+.nav-link.active .nav-number {
+    opacity: 1;
+    transform: translateY(0);
+    margin-bottom: 0;
+}
+
+/* --- ОБНОВЛЕННЫЙ АДАПТИВ ДЛЯ МОБИЛОК --- */
+@media (max-width: 768px) {
+
+    /* На телефонах полностью отключаем анимацию цифр, 
+       так как там нет наведения курсора (hover) */
+    .nav-number {
+        display: none !important;
+    }
+
+    .nav-menu {
+        gap: 25px;
+    }
+
+    .nav-text {
+        font-size: 1rem;
+        font-weight: 800;
+    }
+
+    .header-container {
+        padding: 0 15px;
+    }
+}
+
+/* Контейнер для переключателя */
+.language-switcher {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    /* Полупрозрачный фон */
+    backdrop-filter: blur(10px);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Общие стили кнопок */
+.lang-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+}
+
+/* Ховер эффект для неактивных кнопок */
+.lang-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Активная кнопка (выбранный язык) */
+.lang-btn.active {
+    background: #fff;
+    /* Белый фон для активной */
+    color: #ff6b6b;
+    /* Яркий цвет текста (под цвет мороженого) */
+    opacity: 1;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+/* Адаптивность для мобилок */
+@media (max-width: 480px) {
+    .lang-btn {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+}
+
+/* Контейнер для центровки (если нужно) */
+.nav-lang {
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+}
+
+/* ОСНОВНОЕ СОСТОЯНИЕ КНОПКИ (теперь она всегда белая) */
+.lang-btn-toggle {
+    background: #ffffff;
+    /* Всегда белый фон */
+    color: #ff6b6b;
+    /* Всегда розовый/красный текст */
+    border: 1px solid #ffffff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 800;
+    /* Жирный шрифт для четкости */
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 65px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Легкая тень */
+}
+
+/* ЭФФЕКТ ПРИ НАВЕДЕНИИ (немного меняем яркость или тень) */
+.lang-btn-toggle:hover {
+    transform: translateY(-2px);
+    /* Прыжок вверх */
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.2);
+    background: #fffafa;
+    /* Чуть розоватый оттенок при наведении */
+}
+
+/* ЭФФЕКТ ПРИ НАЖАТИИ */
+.lang-btn-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Иконка глобуса (опционально) */
+.lang-btn-toggle::before {
+    content: '🌐';
+    margin-right: 5px;
+    font-size: 12px;
+}
