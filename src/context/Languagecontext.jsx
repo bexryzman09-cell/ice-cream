@@ -79,7 +79,7 @@ const translations = {
         },
         home: {
             badge: '✨ Premium sifat',
-            title: 'Muzning sehri',     
+            title: 'Muzning sehri',
             titleGradient: 'Urganchda',
             ctaButton: 'Menyuni ko\'rish',
             addButton: '+',
