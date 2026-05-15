@@ -3,9 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Loader from './components/Loader';
 import Home from './pages/home/Home';
-import About from './pages/about/about';
+import About from './pages/about/About'; 
 import NotFound from './pages/NotFound/NotFound';
 import { LanguageProvider } from './context/Languagecontext';
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +18,6 @@ function App() {
   if (loading) return <Loader />;
 
   return (
-   
     <LanguageProvider>
       <Header />
       <Routes>
