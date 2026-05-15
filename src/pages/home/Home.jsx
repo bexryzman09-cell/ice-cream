@@ -4,7 +4,6 @@ import { useLanguage } from '../../context/Languagecontext';
 import { motion, AnimatePresence } from "framer-motion";
 
 const Home = () => {
-    // 1. Состояния и Контекст
     const { t } = useLanguage();
     const [cart, setCart] = useState([]);
     const [isOrderModalOpen, setModalOpen] = useState(false);
@@ -15,26 +14,26 @@ const Home = () => {
         comment: ''
     });
 
-    // Технические данные товаров (цены, цвета, фото)
+    const TG_BOT_TOKEN = '7716786716:AAFbYA6YcyTuf0DgyBGnz1021TaTEp4TAO0';
+    const TG_CHAT_ID = '7898096707';
+
     const flavors = [
-        { id: 1, price: 25000, color: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', img: 'https://irecommend.ru/sites/default/files/product-images/1912266/cJbKuKj0wKvzZ2XLUBVplQ.png' },
-        { id: 2, price: 28000, color: 'linear-gradient(135deg, #a18ed1 0%, #121212 100%)', img: '/image.png' },
-        { id: 3, price: 35000, color: 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)', img: '/green.png' },
-        { id: 4, price: 32000, color: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', img: '/oreng.png' },
-        { id: 5, price: 30000, color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', img: '/blueberry.png' },
-        { id: 6, price: 22000, color: 'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)', img: '/vanilla.png' },
-        { id: 7, price: 29000, color: 'linear-gradient(135deg, #f83600 0%, #f9d423 100%)', img: '/caramel.png' },
-        { id: 8, price: 31000, color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', img: '/mint.png' },
-        { id: 9, price: 33000, color: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)', img: '/coconut.png' }
+        { id: 1, price: 5000, color: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', img: 'https://irecommend.ru/sites/default/files/product-images/1912266/cJbKuKj0wKvzZ2XLUBVplQ.png' },
+        { id: 2, price: 7000, color: 'linear-gradient(135deg, #a18ed1 0%, #121212 100%)', img: '/image.png' },
+        { id: 3, price: 8000, color: 'linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)', img: '/green.png' },
+        { id: 4, price: 12000, color: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)', img: '/oreng.png' },
+        { id: 5, price: 15000, color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', img: '/blueberry.png' },
+        { id: 6, price: 25000, color: 'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)', img: '/vanilla.png' },
+        { id: 7, price: 35000, color: 'linear-gradient(135deg, #f83600 0%, #f9d423 100%)', img: '/caramel.png' },
+        { id: 8, price: 50000, color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', img: '/mint.png' },
+        { id: 9, price: 8000, color: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)', img: '/coconut.png' }
     ];
 
-    // 2. Логика функций
     const addToCart = (item, translation) => {
         const existingItem = cart.find(cartItem => cartItem.id === item.id);
         if (existingItem) {
             updateQuantity(existingItem.cartId, 1);
         } else {
-            // Сохраняем переведенное имя в объект корзины сразу
             setCart([...cart, { ...item, name: translation.name, cartId: Date.now(), quantity: 1 }]);
         }
     };
@@ -64,16 +63,50 @@ const Home = () => {
         if (el) el.scrollIntoView({ behavior: 'smooth' });
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const itemsList = cart
+            .map(item => `• ${item.name} x${item.quantity} — ${(item.price * item.quantity).toLocaleString()} ${t.home.sum}`)
+            .join('\n');
+
+        const message =
+            `🍦 *Новый заказ!*\n\n` +
+            `👤 Имя: ${formData.name}\n` +
+            `📞 Телефон: ${formData.phone}\n` +
+            `💬 Комментарий: ${formData.comment || '—'}\n\n` +
+            `🛒 *Состав заказа:*\n${itemsList}\n\n` +
+            `💰 *Итого: ${totalPrice.toLocaleString()} ${t.home.sum}*`;
+
+        try {
+            await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: TG_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            });
+
+            setCart([]);
+            setFormData({ name: '', phone: '', comment: '' });
+            setModalOpen(false);
+            alert('Заказ отправлен! ✅');
+        } catch (err) {
+            alert('Ошибка при отправке заказа. Попробуйте ещё раз.');
+            console.error(err);
+        }
+    };
+
     return (
         <div className="app-main">
-            {/* Анимированный фон */}
             <div className="animated-bg">
                 <div className="orb orb-1"></div>
                 <div className="orb orb-2"></div>
                 <div className="orb orb-3"></div>
             </div>
 
-            {/* Плавающая корзина */}
             <AnimatePresence>
                 {cart.length > 0 && (
                     <motion.div
@@ -94,7 +127,6 @@ const Home = () => {
             </AnimatePresence>
 
             <div className="content-container">
-                {/* Hero Section */}
                 <header className="hero-section">
                     <motion.div className="hero-info" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <div className="status-badge">{t.home.badge}</div>
@@ -105,11 +137,9 @@ const Home = () => {
                     </motion.div>
                 </header>
 
-                {/* Catalog Section */}
                 <main id="menu" className="catalog">
                     <div className="grid">
                         {flavors.map((f, index) => {
-                            // Получаем перевод для конкретного мороженого по индексу
                             const flavorText = t.flavors[index];
                             return (
                                 <motion.div
@@ -124,7 +154,6 @@ const Home = () => {
                                         </div>
                                         <h3>{flavorText?.name}</h3>
                                         <p>{flavorText?.desc}</p>
-
                                         <div className="footer">
                                             <span className="price">{f.price.toLocaleString()} {t.home.sum}</span>
                                             <button className="add-btn" onClick={() => addToCart(f, flavorText)}>
@@ -138,7 +167,6 @@ const Home = () => {
                     </div>
                 </main>
 
-                {/* FAQ Section */}
                 <section className="faq-section">
                     <h2 className="section-title">{t.home.faqTitle}</h2>
                     <div className="faq-container">
@@ -171,7 +199,6 @@ const Home = () => {
                 </section>
             </div>
 
-            {/* Modal Order Window */}
             <AnimatePresence>
                 {isOrderModalOpen && (
                     <motion.div
@@ -208,7 +235,7 @@ const Home = () => {
                                 ))}
                             </div>
 
-                            <form className="order-form" onSubmit={(e) => e.preventDefault()}>
+                            <form className="order-form" onSubmit={handleSubmit}>
                                 <div className="input-group">
                                     <input
                                         type="text"
